@@ -1,0 +1,23 @@
+require 'rubygems'
+require 'rake'
+require 'echoe'
+
+Echoe.new('next_muni', '0.1.1') do |p|
+  p.description = "A gem to access San Francisco's Next Muni API easily"
+  p.url = "http://www.github.com/hjhart/next_muni_gem"
+  p.author = "James Hart"
+  p.email = "hjhart@gmail.com"
+  p.ignore_pattern = ["tmp/*", "scripts/*"]
+  p.development_dependencies = []
+end
+
+def name
+  @name ||= Dir['*.gemspec'].first.split('.').first
+end
+
+task :default => [:test, :features]
+
+desc "Open an irb session preloaded with this library"
+task :console do
+  sh "irb -rubygems -r ./lib/#{name}.rb"
+end
