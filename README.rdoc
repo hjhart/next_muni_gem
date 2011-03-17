@@ -1,0 +1,26 @@
+== NextMuni Gem
+
+The NextMuni gem makes it easy to access your NextMuni daily buses arrival times. First, start by entering your bus number
+to identify your stop_id, Then pass both the bus number and your stop_id to get an array of next arrival times.
+
+Currently, the API is only currently tested to work with the SF Muni services.
+
+Questions are welcome on the github wiki for now – https://github.com/hjhart/next_muni_gem/wiki
+
+== Usage
+
+# get_stops(route_no)
+NextMuni.get_stops(45)
+
+This will return you a Hash with keys being the stop_id and the values being the name of the stop.
+Use this function to figure out the stop_id you want to grab from the get_times function.
+
+# get_times(route_no, stop_id)
+NextMuni.get_times(45, 6771)
+
+This will return you upcoming times for the next (up to four) buses coming to that stop.
+
+== Todo
+
+• Cache the route stops
+• Need to separate out stops between different bus directions
