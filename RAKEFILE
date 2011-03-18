@@ -2,7 +2,7 @@ require 'rubygems'
 require 'rake'
 require 'echoe'
 
-Echoe.new('next_muni', '0.1.2') do |p|
+Echoe.new('next_muni', '0.1.3') do |p|
   p.description = "A gem to access San Francisco's Next Muni API easily"
   p.url = "http://www.github.com/hjhart/next_muni_gem"
   p.author = "James Hart"
@@ -14,8 +14,6 @@ end
 def name
   @name ||= Dir['*.gemspec'].first.split('.').first
 end
-
-task :default => [:test, :features]
 
 desc "Open an irb session preloaded with this library"
 task :console do

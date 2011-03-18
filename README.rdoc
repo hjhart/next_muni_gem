@@ -23,4 +23,6 @@ This will return you upcoming times for the next (up to four) buses coming to th
 == Todo
 
 • Cache the route stops
-• Need to separate out stops between different bus directions
+• Inbound / Outbound parameters?
+• Better error handling (No busses scheduled / Bad query)
+• Need to integrate testing into gem
