@@ -3,11 +3,10 @@ require 'rubygems'
 require 'rexml/document'
 require 'net/http'
 
-require 'next_muni/api'
 
 module NextMuni
   def self.get_stops(route)
-    url = NextMuni::Api.build_url(route.upcase)
+    url = NextMuni.build_url(route.upcase)
     xml = Net::HTTP.get(URI.parse(url))
     doc = REXML::Document.new(xml)
     directions = []
@@ -33,7 +32,7 @@ module NextMuni
   end
 
   def self.get_times(route_no, stop_no, direction_id=nil)
-    url = NextMuni::Api.build_url(route_no.upcase, stop_no, direction_id)
+    url = NextMuni.build_url(route_no.upcase, stop_no, direction_id)
     xml = Net::HTTP.get(URI.parse(url))
 
     doc = REXML::Document.new(xml)
@@ -43,4 +42,38 @@ module NextMuni
     end
     times
   end
+
+  # Some agencies: sf-muni, actransit
+  def self.get_routes(agency)
+    url = "http://webservices.nextbus.com/service/publicXMLFeed?command=routeList&a=#{agency}"
+    xml = Net::HTTP.get(URI.parse(url))
+
+    doc = REXML::Document.new(xml)
+    routes = []
+
+    doc.elements.each('body/route') do |route|
+      routes << {
+          :id => route.attributes['tag'],
+          :title => route.attributes['title']
+      }
+    end
+    routes
+  end
+
+#  get stops
+#  http://webservices.nextbus.com/service/publicXMLFeed?command=routeConfig&a=sf-muni&r=45
+#  get times
+#  http://webservices.nextbus.com/service/publicXMLFeed?command=predictions&a=sf-muni&r=<route tag>&d=<direction tag>&s=<stop tag>
+#  multiples
+#  http://webservices.nextbus.com/service/publicXMLFeed?command=predictionsForMultiStops&a=sf-muni&stops=45|45_IB2|6787&stops=45|45_IB2|6771
+  def self.build_url(route_number, agency='sf-muni', stop_id = nil, dir_id = nil)
+    if stop_id.nil?
+      url = "http://webservices.nextbus.com/service/publicXMLFeed?command=routeConfig&a=#{agency}&r=#{route_number}"
+    else
+      url = "http://webservices.nextbus.com/service/publicXMLFeed?command=predictions&a=#{agency}&r=#{route_number}&s=#{stop_id}"
+      url += "&d=#{dir_id}" unless dir_id.nil?
+    end
+    url
+  end
+
 end
